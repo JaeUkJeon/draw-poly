@@ -144,7 +144,8 @@ class VTKControl:
                 cl = vtkIdList()
                 self.grid_data.GetPointCells(point_id, cl)
                 for idx in range(cl.GetNumberOfIds()):
-                    self.select_cell_ids.remove(cl.GetId(idx))
+                    if cl.GetId(idx) in self.select_cell_ids:
+                        self.select_cell_ids.remove(cl.GetId(idx))
                 self.selection_node.SetSelectionList(set_to_id_type_array(self.select_cell_ids))
         else:
             if point_id not in self.select_cell_point_ids:
