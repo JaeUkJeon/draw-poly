@@ -60,6 +60,9 @@ class MainView(QtWidgets.QMainWindow):
             self.ui.actionNode.setChecked(True)
 
     def open_save_dialog(self):
+        ret = self.vtk.check_save_possible()
+        if not ret:
+            QtWidgets.QMessageBox.critical(self, 'Error', 'Error: No meshes or nodes selected.')
         path = QtWidgets.QFileDialog.getSaveFileName(
             self,
             "Save File",
@@ -67,7 +70,9 @@ class MainView(QtWidgets.QMainWindow):
             "PLY File (*.ply)",
         )
         if path[0]:
-            self.vtk.save_ply(path=path[0])
+            ret = self.vtk.save_ply(path=path[0])
+            if ret != 1:
+                QtWidgets.QMessageBox.critical(self, 'Error', 'Error: Failed to save PLY file.')
 
     def select_menu_temp(self, point_id, shape):
         self.vtk.change_mesh(point_id, shape)

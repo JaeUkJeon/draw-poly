@@ -371,7 +371,16 @@ class VTKControl:
 
         return output_grid
 
+    def check_save_possible(self):
+        if self.extract_selection.GetOutput().GetNumberOfCells() == 0:
+            return False
+        elif self.extract_selection.GetOutput().GetNumberOfPoints() == 0:
+            return False
+        return True
+
     def save_ply(self, path='test.ply'):
+        if self.extract_selection.GetOutput().GetNumberOfCells() == 0:
+            return -1
         writer = vtkPLYWriter()
         writer.SetFileName(path)
 
@@ -409,7 +418,7 @@ class VTKControl:
             writer.SetInputConnection(delaunay.GetOutputPort(0))
 
         writer.SetFileTypeToASCII()
-        writer.Write()
+        return writer.Write()
 
     def init_quad_grid(self):
         # Create points on an XY grid with random Z coordinate
